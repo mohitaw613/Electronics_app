@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'services/user_identity.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final userId = await getOrCreateUserId();
+
+  print('USER ID: $userId');
+
   runApp(const MyApp());
 }
 
