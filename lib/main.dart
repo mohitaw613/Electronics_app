@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'services/user_identity.dart';
 import 'services/database_service.dart';
 import 'services/auth_service.dart';
+import 'services/neon_http_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _checkDbConnection();
   }
 
-  /// Attempts to open a connection to Neon PostgreSQL, runs a lightweight
-  /// SELECT 1 ping query, then closes the connection cleanly.
+  /// Pings Neon PostgreSQL via the HTTP SQL API (port 443).
+  /// Works on all networks including college Wi-Fi where port 5432 is blocked.
   /// Updates [_dbStatus] to reflect the result.
   Future<void> _checkDbConnection() async {
     setState(() {
@@ -94,11 +95,19 @@ class _MyHomePageState extends State<MyHomePage> {
       _dbError = '';
     });
     try {
-      final connection = await DatabaseService.connect();
-      await connection.execute('SELECT 1');
-      await connection.close();
-      setState(() => _dbStatus = DbStatus.connected);
-      print('DB Connection: SUCCESS');
+      // NeonHttpService.ping() sends SELECT 1 over HTTPS (port 443).
+      // This bypasses any firewall rules that block port 5432.
+      final isAlive = await NeonHttpService.ping();
+      if (isAlive) {
+        setState(() => _dbStatus = DbStatus.connected);
+        print('DB Connection: SUCCESS (via HTTP API port 443)');
+      } else {
+        setState(() {
+          _dbStatus = DbStatus.failed;
+          _dbError = 'No response from Neon HTTP API';
+        });
+        print('DB Connection: FAILED — No response');
+      }
     } catch (e) {
       setState(() {
         _dbStatus = DbStatus.failed;
