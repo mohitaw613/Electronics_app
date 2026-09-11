@@ -4,9 +4,9 @@ import 'services/user_identity.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final userId = await getOrCreateUserId();
+  await getOrCreateUserId();
 
-  print('USER ID: $userId');
+  
 
   runApp(const MyApp());
 }
