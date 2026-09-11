@@ -84,6 +84,28 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     // Automatically check the Neon PostgreSQL connection when the screen loads.
     _checkDbConnection();
+    // Save this device's UUID and timestamp to Neon device_users table.
+    _saveDeviceUser();
+  }
+
+  /// Retrieves the device UUID (from SharedPreferences) and inserts it
+  /// into the [device_users] table in Neon PostgreSQL.
+  ///
+  /// Uses ON CONFLICT DO NOTHING so repeated app opens never create
+  /// duplicate rows — the same device always has exactly one record.
+  Future<void> _saveDeviceUser() async {
+    try {
+      final userId = await getOrCreateUserId();
+      await NeonHttpService.execute(
+        'INSERT INTO device_users (user_id, created_at) '
+        'VALUES (\$1, NOW()) '
+        'ON CONFLICT (user_id) DO NOTHING',
+        params: [userId],
+      );
+      print('Device user saved to Neon: $userId');
+    } catch (e) {
+      print('Failed to save device user: $e');
+    }
   }
 
   /// Pings Neon PostgreSQL via the HTTP SQL API (port 443).
