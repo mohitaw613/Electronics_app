@@ -6,20 +6,83 @@ import '../models/output_reading.dart';
 import 'neon_http_service.dart';
 import 'user_identity.dart';
 
-/// Database service for managing Experiment 5 sessions in Neon PostgreSQL.
-/// (Module assigned to Mohit).
+/// Database and in-memory state service for managing Experiment 5 data.
 class ExperimentService {
-  /// Saves a new experiment session containing raw input and output readings to Neon.
+  // Shared in-memory data store across all screens
+  static List<InputReading> liveInputReadings = _generateDefaultInputReadings();
+  static List<OutputReading> liveOutputReadings = _generateDefaultOutputReadings();
+
+  static List<InputReading> _generateDefaultInputReadings() {
+    final list = <InputReading>[];
+    final steps = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+    for (final vbb in steps) {
+      double vbe = 0.0, ib = 0.0;
+      if (vbb > 0.6) {
+        vbe = 0.65 + (vbb / 5.0) * 0.07;
+        ib = (vbb - vbe) / 1.0 * 1000.0;
+      }
+      list.add(InputReading(
+        vbb: vbb,
+        vce: 1.0,
+        vbe: double.parse(vbe.toStringAsFixed(3)),
+        ib: double.parse(ib.toStringAsFixed(1)),
+      ));
+      list.add(InputReading(
+        vbb: vbb,
+        vce: 2.0,
+        vbe: double.parse(vbe.toStringAsFixed(3)),
+        ib: double.parse((ib * 0.98).toStringAsFixed(1)),
+      ));
+    }
+    return list;
+  }
+
+  static List<OutputReading> _generateDefaultOutputReadings() {
+    final list = <OutputReading>[];
+    final steps = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0];
+    for (final vcc in steps) {
+      double vce = vcc * 0.9, ic = 0.65;
+      if (vcc <= 1.0) {
+        vce = vcc * 0.2;
+        ic = vcc * 0.6;
+      }
+      list.add(OutputReading(
+        vcc: vcc,
+        ib: 4.3,
+        vce: double.parse(vce.toStringAsFixed(2)),
+        ic: double.parse(ic.toStringAsFixed(2)),
+      ));
+    }
+    for (final vcc in steps) {
+      double vce = vcc * 0.85, ic = 1.50;
+      if (vcc <= 1.0) {
+        vce = vcc * 0.25;
+        ic = vcc * 1.4;
+      }
+      list.add(OutputReading(
+        vcc: vcc,
+        ib: 10.0,
+        vce: double.parse(vce.toStringAsFixed(2)),
+        ic: double.parse(ic.toStringAsFixed(2)),
+      ));
+    }
+    return list;
+  }
+
+  /// Saves an experiment session containing raw input and output readings to cloud database.
   static Future<ExperimentSession> saveExperimentSession({
-    List<InputReading> inputReadings = const [],
-    List<OutputReading> outputReadings = const [],
+    List<InputReading>? inputReadings,
+    List<OutputReading>? outputReadings,
   }) async {
+    final inputsToSave = inputReadings ?? liveInputReadings;
+    final outputsToSave = outputReadings ?? liveOutputReadings;
+
     final userId = await getOrCreateUserId();
     final sessionId = const Uuid().v4();
     final now = DateTime.now().toUtc();
 
-    final inputJson = jsonEncode(inputReadings.map((r) => r.toJson()).toList());
-    final outputJson = jsonEncode(outputReadings.map((r) => r.toJson()).toList());
+    final inputJson = jsonEncode(inputsToSave.map((r) => r.toJson()).toList());
+    final outputJson = jsonEncode(outputsToSave.map((r) => r.toJson()).toList());
 
     await NeonHttpService.execute(
       'INSERT INTO experiment_sessions (session_id, user_id, created_at, input_readings, output_readings) '
@@ -37,12 +100,12 @@ class ExperimentService {
       sessionId: sessionId,
       userId: userId,
       createdAt: now,
-      inputReadings: inputReadings,
-      outputReadings: outputReadings,
+      inputReadings: inputsToSave,
+      outputReadings: outputsToSave,
     );
   }
 
-  /// Retrieves all experiment sessions for the current device from Neon.
+  /// Retrieves all experiment sessions for the current device from cloud database.
   static Future<List<ExperimentSession>> getExperimentSessions() async {
     final userId = await getOrCreateUserId();
 
@@ -90,6 +153,16 @@ class ExperimentService {
   /// Retrieves the most recent experiment session for graphing.
   static Future<ExperimentSession?> getLatestSession() async {
     final sessions = await getExperimentSessions();
-    return sessions.isNotEmpty ? sessions.first : null;
+    if (sessions.isNotEmpty) {
+      final s = sessions.first;
+      if (s.inputReadings.isNotEmpty) {
+        liveInputReadings = List.from(s.inputReadings);
+      }
+      if (s.outputReadings.isNotEmpty) {
+        liveOutputReadings = List.from(s.outputReadings);
+      }
+      return s;
+    }
+    return null;
   }
 }

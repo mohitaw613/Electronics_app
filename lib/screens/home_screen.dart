@@ -7,6 +7,8 @@ import 'graph_screen.dart';
 import 'theory_screen.dart';
 import 'simulation_screen.dart';
 
+import '../main.dart';
+
 enum DbStatus { checking, connected, failed }
 
 class HomeScreen extends StatefulWidget {
@@ -39,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         setState(() {
           _dbStatus = DbStatus.failed;
-          _dbError = 'No response from Neon HTTP API';
+          _dbError = 'Database unreachable';
         });
       }
     } catch (e) {
@@ -75,19 +77,19 @@ class _HomeScreenState extends State<HomeScreen> {
         cardColor = Colors.amber.shade100;
         textColor = Colors.orange.shade800;
         icon = Icons.hourglass_empty;
-        message = 'Connecting to Neon PostgreSQL...';
+        message = 'Connecting to Database...';
         break;
       case DbStatus.connected:
         cardColor = Colors.green.shade100;
         textColor = Colors.green.shade800;
         icon = Icons.check_circle;
-        message = 'Neon PostgreSQL Connected ✓';
+        message = 'Database Connected ✓';
         break;
       case DbStatus.failed:
         cardColor = Colors.red.shade100;
         textColor = Colors.red.shade800;
         icon = Icons.error;
-        message = 'DB Offline: $_dbError';
+        message = 'Database Offline: $_dbError';
         break;
     }
 
@@ -145,6 +147,21 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Experiment 5: BJT Common Emitter'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: appThemeNotifier,
+            builder: (context, mode, _) {
+              final isDark = mode == ThemeMode.dark;
+              return IconButton(
+                tooltip: isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme',
+                icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                onPressed: () {
+                  appThemeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         children: [
@@ -158,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildNavTile(
             title: 'Input Characteristics',
-            subtitle: 'Record IB vs VBE at constant VCE (Dinesh)',
+            subtitle: 'Record IB vs VBE at constant VCE',
             icon: Icons.input,
             color: Colors.blue,
             onTap: () => Navigator.push(
@@ -168,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildNavTile(
             title: 'Output Characteristics',
-            subtitle: 'Record IC vs VCE at constant IB (Dinesh)',
+            subtitle: 'Record IC vs VCE at constant IB',
             icon: Icons.output,
             color: Colors.teal,
             onTap: () => Navigator.push(
@@ -178,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildNavTile(
             title: 'Graph Characteristics',
-            subtitle: 'Plot Input & Output curves from stored data (Ishan)',
+            subtitle: 'Scientific best-fit curve plotting & scaling',
             icon: Icons.show_chart,
             color: Colors.purple,
             onTap: () => Navigator.push(
@@ -188,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildNavTile(
             title: 'Theory & Circuit',
-            subtitle: 'Objective, formulae, components & pinout (Suresh)',
+            subtitle: 'Objectives, circuit schematics & pinout',
             icon: Icons.menu_book,
             color: Colors.amber.shade800,
             onTap: () => Navigator.push(
@@ -198,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildNavTile(
             title: 'Virtual Simulation',
-            subtitle: 'Interactive BJT CE parameter sweep (Suresh)',
+            subtitle: 'Interactive circuit parameters & current flow',
             icon: Icons.precision_manufacturing,
             color: Colors.deepOrange,
             onTap: () => Navigator.push(

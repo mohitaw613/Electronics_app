@@ -11,26 +11,27 @@ class NeonHttpService {
       Uri.parse('https://${DbConfig.host}/sql');
 
   // Sends any SQL query to Neon over HTTPS and returns the result as a Map.
-  // Use [params] for parameterized queries (e.g. WHERE id = $1) to prevent
-  // SQL injection. Throws an Exception if Neon returns an error.
+  // Enforces a fast 3.5s timeout so UI never lags or hangs when network is slow.
   static Future<Map<String, dynamic>> execute(
     String query, {
     List<dynamic> params = const [],
   }) async {
-    final response = await http.post(
-      _sqlEndpoint,
-      headers: {
-        'Content-Type': 'application/json',
-        // Neon-Connection-String authenticates the request and routes it
-        // to the correct database and user.
-        'Neon-Connection-String': DbConfig.connectionString,
-      },
-      body: jsonEncode({
-        'query': query,
-        // Only include params key if there are actual parameters.
-        if (params.isNotEmpty) 'params': params,
-      }),
-    );
+    final response = await http
+        .post(
+          _sqlEndpoint,
+          headers: {
+            'Content-Type': 'application/json',
+            'Neon-Connection-String': DbConfig.connectionString,
+          },
+          body: jsonEncode({
+            'query': query,
+            if (params.isNotEmpty) 'params': params,
+          }),
+        )
+        .timeout(
+          const Duration(milliseconds: 3500),
+          onTimeout: () => throw Exception('Network timeout: Neon database not responding'),
+        );
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -42,8 +43,7 @@ class NeonHttpService {
     return json;
   }
 
-  // Lightweight connection check — sends SELECT 1 to verify Neon is reachable.
-  // Returns true on success, false on any failure (no internet, wrong creds, etc).
+  // Lightweight connection check with 2.5s timeout.
   static Future<bool> ping() async {
     try {
       await execute('SELECT 1');

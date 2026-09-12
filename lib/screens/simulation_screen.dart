@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../widgets/proteus_bjt_circuit.dart';
+import 'bjt_3d_viewer_screen.dart';
 
-/// Screen for BJT Common Emitter virtual simulation with Proteus schematic layout.
-/// (Module assigned to Suresh).
+/// Screen for BJT Common Emitter virtual simulation with circuit layout.
 class SimulationScreen extends StatefulWidget {
   const SimulationScreen({super.key});
 
@@ -54,9 +54,24 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('BJT CE Virtual Simulation'),
+        actions: [
+          IconButton(
+            tooltip: 'Transistor Packages & Pinouts',
+            icon: const Icon(Icons.memory),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const Bjt3dViewerScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
@@ -65,9 +80,9 @@ class _SimulationScreenState extends State<SimulationScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: _regionColor.withValues(alpha: 0.15),
+              color: _regionColor.withValues(alpha: isDark ? 0.2 : 0.12),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: _regionColor),
+              border: Border.all(color: _regionColor, width: 1.2),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +98,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
           ),
           const SizedBox(height: 14),
 
-          // 2. Proteus CAD Circuit Schematic Layout with Live Current Flow
+          // 2. Circuit Schematic Layout with Live Current Flow
           ProteusBjtCircuit(
             vbb: _vbb,
             vcc: _vcc,
@@ -97,79 +112,122 @@ class _SimulationScreenState extends State<SimulationScreen> {
           ),
           const SizedBox(height: 14),
 
-          // 3. Digital Multimeter Probes Display
-          Row(
-            children: [
-              Expanded(child: _buildMeterCard('VBE (Base-Emitter)', '${_vbe.toStringAsFixed(3)} V', Colors.blue)),
-              const SizedBox(width: 8),
-              Expanded(child: _buildMeterCard('IB (Base Current)', '${_ib.toStringAsFixed(1)} µA', Colors.amber.shade700)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(child: _buildMeterCard('VCE (Collector-Emitter)', '${_vce.toStringAsFixed(2)} V', Colors.teal)),
-              const SizedBox(width: 8),
-              Expanded(child: _buildMeterCard('IC (Collector Current)', '${_ic.toStringAsFixed(2)} mA', Colors.green)),
-            ],
+          // 3. Digital Multimeter Probes Display (Wrapped in RepaintBoundary for smooth sliding)
+          RepaintBoundary(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: _buildMeterCard('VBE (Base-Emitter)', '${_vbe.toStringAsFixed(3)} V', Colors.blue, cs, isDark)),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildMeterCard('IB (Base Current)', '${_ib.toStringAsFixed(1)} µA', Colors.amber.shade700, cs, isDark)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _buildMeterCard('VCE (Collector-Emitter)', '${_vce.toStringAsFixed(2)} V', Colors.teal, cs, isDark)),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildMeterCard('IC (Collector Current)', '${_ic.toStringAsFixed(2)} mA', Colors.green, cs, isDark)),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           const Divider(),
 
-          // 4. Circuit Controls
-          const Text('Adjust Proteus Power Supplies & Resistors', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          const SizedBox(height: 10),
+          // 4. Circuit Controls (High responsiveness)
+          RepaintBoundary(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Adjust Circuit Power Supplies & Resistors',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: cs.onSurface),
+                ),
+                const SizedBox(height: 10),
 
-          Text('Base Supply Voltage V1 (Vbb): ${_vbb.toStringAsFixed(1)} V (0V - 5V)'),
-          Slider(
-            value: _vbb,
-            min: 0.0,
-            max: 5.0,
-            divisions: 50,
-            onChanged: (val) => setState(() => _vbb = val),
-          ),
+                Text(
+                  'Base Supply Voltage V1 (Vbb): ${_vbb.toStringAsFixed(1)} V (0V - 5V)',
+                  style: TextStyle(fontSize: 13, color: cs.onSurface),
+                ),
+                Slider(
+                  value: _vbb,
+                  min: 0.0,
+                  max: 5.0,
+                  divisions: 50,
+                  onChanged: (val) => setState(() => _vbb = val),
+                ),
 
-          Text('Collector Supply Voltage V2 (Vcc): ${_vcc.toStringAsFixed(1)} V (0V - 15V)'),
-          Slider(
-            value: _vcc,
-            min: 0.0,
-            max: 15.0,
-            divisions: 150,
-            onChanged: (val) => setState(() => _vcc = val),
-          ),
+                Text(
+                  'Collector Supply Voltage V2 (Vcc): ${_vcc.toStringAsFixed(1)} V (0V - 15V)',
+                  style: TextStyle(fontSize: 13, color: cs.onSurface),
+                ),
+                Slider(
+                  value: _vcc,
+                  min: 0.0,
+                  max: 15.0,
+                  divisions: 150,
+                  onChanged: (val) => setState(() => _vcc = val),
+                ),
 
-          Text('Base Resistor R1 (Rb): ${_rb.toStringAsFixed(0)} kΩ (10kΩ - 1000kΩ)'),
-          Slider(
-            value: _rb,
-            min: 10.0,
-            max: 1000.0,
-            divisions: 99,
-            onChanged: (val) => setState(() => _rb = val),
-          ),
+                Text(
+                  'Base Resistor R1 (Rb): ${_rb.toStringAsFixed(0)} kΩ (10kΩ - 1000kΩ)',
+                  style: TextStyle(fontSize: 13, color: cs.onSurface),
+                ),
+                Slider(
+                  value: _rb,
+                  min: 10.0,
+                  max: 1000.0,
+                  divisions: 99,
+                  onChanged: (val) => setState(() => _rb = val),
+                ),
 
-          Text('Collector Resistor R2 (Rc): ${_rc.toStringAsFixed(1)} kΩ (0.5kΩ - 5kΩ)'),
-          Slider(
-            value: _rc,
-            min: 0.5,
-            max: 5.0,
-            divisions: 45,
-            onChanged: (val) => setState(() => _rc = val),
+                Text(
+                  'Collector Resistor R2 (Rc): ${_rc.toStringAsFixed(1)} kΩ (0.5kΩ - 5kΩ)',
+                  style: TextStyle(fontSize: 13, color: cs.onSurface),
+                ),
+                Slider(
+                  value: _rc,
+                  min: 0.5,
+                  max: 5.0,
+                  divisions: 45,
+                  onChanged: (val) => setState(() => _rc = val),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMeterCard(String label, String value, Color color) {
+  Widget _buildMeterCard(String label, String value, Color color, ColorScheme cs, bool isDark) {
     return Card(
-      elevation: 2,
+      elevation: isDark ? 1 : 2,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
           children: [
-            Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 10, fontWeight: FontWeight.bold)),
+            Text(
+              label,
+              style: TextStyle(
+                color: isDark ? cs.onSurface.withValues(alpha: 0.7) : Colors.grey.shade700,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(value, style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+            Text(
+              value,
+              style: TextStyle(
+                color: color,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+              ),
+            ),
           ],
         ),
       ),
