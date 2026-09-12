@@ -189,7 +189,11 @@ class _OutputScreenState extends State<OutputScreen> {
                             decoration: const InputDecoration(labelText: 'Vce (V)', isDense: true, border: OutlineInputBorder()),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
                         Expanded(
                           child: TextField(
                             controller: _icController,
@@ -198,9 +202,10 @@ class _OutputScreenState extends State<OutputScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: _addCustomReading,
-                          child: const Text('Add'),
+                          icon: const Icon(Icons.add, size: 16),
+                          label: const Text('Add Row'),
                         ),
                       ],
                     ),
@@ -209,8 +214,11 @@ class _OutputScreenState extends State<OutputScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 Text(
                   'Observation Table (IB = $_selectedIb µA)',

@@ -168,7 +168,11 @@ class _InputScreenState extends State<InputScreen> {
                             decoration: const InputDecoration(labelText: 'Vbe (V)', isDense: true, border: OutlineInputBorder()),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
                         Expanded(
                           child: TextField(
                             controller: _ibController,
@@ -177,9 +181,10 @@ class _InputScreenState extends State<InputScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: _addCustomReading,
-                          child: const Text('Add'),
+                          icon: const Icon(Icons.add, size: 16),
+                          label: const Text('Add Row'),
                         ),
                       ],
                     ),
@@ -188,8 +193,11 @@ class _InputScreenState extends State<InputScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 Text(
                   'Observation Table (Vce = ${_selectedVce}V)',
