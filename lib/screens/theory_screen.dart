@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bjt_3d_viewer_screen.dart';
+import 'bjt_2d_viewer_screen.dart';
 
 /// Screen displaying full Experiment 5 theory, circuit schematics, procedures, and pinouts.
 class TheoryScreen extends StatelessWidget {

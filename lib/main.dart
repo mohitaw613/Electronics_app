@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/unified_lab_screen.dart';
 
 /// Global theme notifier for toggling between Light (White) and Dark themes.
 final ValueNotifier<ThemeMode> appThemeNotifier = ValueNotifier(ThemeMode.light);
@@ -41,7 +41,7 @@ class ElectronicsApp extends StatelessWidget {
             cardColor: const Color(0xFF1E293B),
             useMaterial3: true,
           ),
-          home: const HomeScreen(),
+          home: const UnifiedLabScreen(),
         );
       },
     );

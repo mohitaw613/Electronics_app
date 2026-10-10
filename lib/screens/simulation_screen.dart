@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../widgets/proteus_bjt_circuit.dart';
-import 'bjt_3d_viewer_screen.dart';
+import 'bjt_2d_viewer_screen.dart';
 
 /// Screen for BJT Common Emitter virtual simulation with circuit layout.
 class SimulationScreen extends StatefulWidget {

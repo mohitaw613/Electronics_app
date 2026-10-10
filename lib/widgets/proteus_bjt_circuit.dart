@@ -14,6 +14,8 @@ class ProteusBjtCircuit extends StatefulWidget {
   final double ib;  // Base current in µA
   final double ic;  // Collector current in mA
   final String region; // Operating region string
+  final String transistorName; // Selected transistor name e.g. BC547, 2N2222
+  final String transistorType; // NPN or PNP
 
   const ProteusBjtCircuit({
     super.key,
@@ -26,6 +28,8 @@ class ProteusBjtCircuit extends StatefulWidget {
     required this.ib,
     required this.ic,
     required this.region,
+    this.transistorName = 'BC547',
+    this.transistorType = 'NPN',
   });
 
   @override
@@ -102,7 +106,7 @@ class _ProteusBjtCircuitState extends State<ProteusBjtCircuit> with SingleTicker
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'BJT CE CONFIGURATION (BC547 NPN)',
+                      'BJT CE CONFIGURATION (${widget.transistorName} ${widget.transistorType})',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.grey.shade300,
@@ -132,6 +136,8 @@ class _ProteusBjtCircuitState extends State<ProteusBjtCircuit> with SingleTicker
                       vce: widget.vce,
                       ib: widget.ib,
                       ic: widget.ic,
+                      transistorName: widget.transistorName,
+                      transistorType: widget.transistorType,
                     ),
                   );
                 },
@@ -154,6 +160,8 @@ class _SchematicPainter extends CustomPainter {
   final double vce;
   final double ib;
   final double ic;
+  final String transistorName;
+  final String transistorType;
 
   _SchematicPainter({
     required this.animProgress,
@@ -165,6 +173,8 @@ class _SchematicPainter extends CustomPainter {
     required this.vce,
     required this.ib,
     required this.ic,
+    required this.transistorName,
+    required this.transistorType,
   });
 
   @override
@@ -284,8 +294,8 @@ class _SchematicPainter extends CustomPainter {
     // Base-Emitter Voltmeter (VBE)
     _drawVoltmeter(canvas, Offset(vbeVoltX, voltMeterY), 'VBE', '${vbe.toStringAsFixed(3)} V');
 
-    // Transistor Q1 (BC547 NPN)
-    _drawBjtTransistor(canvas, Offset(bjtCenterX, midY), bjtBaseX, bjtLeadX, bjtCollectorY, bjtEmitterY);
+    // Transistor Q1
+    _drawBjtTransistor(canvas, Offset(bjtCenterX, midY), bjtBaseX, bjtLeadX, bjtCollectorY, bjtEmitterY, transistorName, transistorType);
 
     // Collector-Emitter Voltmeter (VCE)
     _drawVoltmeter(canvas, Offset(vceVoltX, voltMeterY), 'VCE', '${vce.toStringAsFixed(2)} V');
@@ -333,6 +343,8 @@ class _SchematicPainter extends CustomPainter {
     double leadX,
     double colY,
     double emY,
+    String tName,
+    String tType,
   ) {
     final tPaint = Paint()
       ..color = Colors.white
@@ -369,17 +381,26 @@ class _SchematicPainter extends CustomPainter {
     canvas.drawLine(emBranchStart, emBranchEnd, tPaint);
     canvas.drawLine(emBranchEnd, Offset(leadX, emY), tPaint);
 
-    // Emitter Arrow (Pointing Outward for NPN)
-    final arrowTip = emBranchEnd;
-    final arrowPath = Path()
-      ..moveTo(arrowTip.dx, arrowTip.dy)
-      ..lineTo(arrowTip.dx - 6, arrowTip.dy - 2)
-      ..lineTo(arrowTip.dx - 3, arrowTip.dy - 6)
-      ..close();
-    canvas.drawPath(arrowPath, Paint()..color = Colors.white..style = PaintingStyle.fill);
+    // Emitter Arrow: Outward for NPN, Inward for PNP
+    if (tType.toUpperCase() == 'PNP') {
+      final arrowPath = Path()
+        ..moveTo(emBranchStart.dx + 2, emBranchStart.dy)
+        ..lineTo(emBranchStart.dx + 7, emBranchStart.dy - 2)
+        ..lineTo(emBranchStart.dx + 6, emBranchStart.dy + 5)
+        ..close();
+      canvas.drawPath(arrowPath, Paint()..color = Colors.white..style = PaintingStyle.fill);
+    } else {
+      final arrowTip = emBranchEnd;
+      final arrowPath = Path()
+        ..moveTo(arrowTip.dx, arrowTip.dy)
+        ..lineTo(arrowTip.dx - 6, arrowTip.dy - 2)
+        ..lineTo(arrowTip.dx - 3, arrowTip.dy - 6)
+        ..close();
+      canvas.drawPath(arrowPath, Paint()..color = Colors.white..style = PaintingStyle.fill);
+    }
 
     // Labels
-    _drawText(canvas, Offset(center.dx - 18, center.dy - 37), 'Q1 (BC547)', color: Colors.cyanAccent, fontSize: 9.5, isBold: true);
+    _drawText(canvas, Offset(center.dx - 22, center.dy - 37), 'Q1 ($tName)', color: Colors.cyanAccent, fontSize: 9.5, isBold: true);
     _drawText(canvas, Offset(bx - 10, center.dy - 12), 'B', color: Colors.amberAccent, fontSize: 8.5, isBold: true);
     _drawText(canvas, Offset(leadX + 5, colY + 4), 'C', color: Colors.greenAccent, fontSize: 8.5, isBold: true);
     _drawText(canvas, Offset(leadX + 5, emY - 12), 'E', color: Colors.white, fontSize: 8.5, isBold: true);

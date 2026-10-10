@@ -6,14 +6,14 @@ import 'package:electronics_app/screens/output_screen.dart';
 import 'package:electronics_app/screens/simulation_screen.dart';
 import 'package:electronics_app/screens/theory_screen.dart';
 import 'package:electronics_app/screens/graph_screen.dart';
-import 'package:electronics_app/screens/bjt_3d_viewer_screen.dart';
+import 'package:electronics_app/screens/bjt_2d_viewer_screen.dart';
 
 void main() {
   testWidgets('App smoke and theme toggle test', (WidgetTester tester) async {
     await tester.pumpWidget(const ElectronicsApp());
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Experiment 5: BJT Common Emitter'), findsOneWidget);
+    expect(find.text('BJT CE Lab'), findsOneWidget);
 
     // Toggle to Dark Theme
     appThemeNotifier.value = ThemeMode.dark;
