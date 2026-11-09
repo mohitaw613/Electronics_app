@@ -11,6 +11,7 @@ import '../widgets/proteus_bjt_circuit.dart';
 import '../widgets/slope_chart_widget.dart';
 import '../widgets/virtual_breadboard.dart';
 import 'bjt_2d_viewer_screen.dart';
+import 'mcq_screen.dart';
 
 // ── Transistor Model ──────────────────────────────────────────────────────────
 class TransistorSpec {
@@ -126,6 +127,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   bool _expandTables = true;     // Expanded
   bool _expandGraphs = true;     // Expanded
   bool _expandNotes = false;     // Collapsed by default
+  bool _expandMcq = false;
 
   // Section Keys for smooth auto-scrolling
   final GlobalKey _keyTheory = GlobalKey();
@@ -134,6 +136,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   final GlobalKey _keyTables = GlobalKey();
   final GlobalKey _keyGraphs = GlobalKey();
   final GlobalKey _keyNotes = GlobalKey();
+  final GlobalKey _keyMcq = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -145,6 +148,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       if (sectionIdx == 3) _expandTables = true;
       if (sectionIdx == 4) _expandGraphs = true;
       if (sectionIdx == 5) _expandNotes = true;
+      if (sectionIdx == 6) _expandMcq = true;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -166,6 +170,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandTables = (sectionIdx == 3);
       _expandGraphs = (sectionIdx == 4);
       _expandNotes = (sectionIdx == 5);
+      _expandMcq = (sectionIdx == 6);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -187,6 +192,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandTables = expand;
       _expandGraphs = expand;
       _expandNotes = expand;
+      _expandMcq = expand;
     });
   }
 
@@ -807,6 +813,27 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                         ),
                       ),
                     ],
+                    // ========== 7. MCQ QUIZ ==========
+                    _notionHeading(
+                      key: _keyMcq,
+                      num: '7',
+                      title: 'MCQ Practice',
+                      icon: Icons.quiz,
+                      color: Colors.green,
+                      isExpanded: _expandMcq,
+                      onToggle: () =>
+                          setState(() => _expandMcq = !_expandMcq),
+                      onSolo: () => _soloSection(6, _keyMcq),
+                    ),
+                    if (_expandMcq) ...[
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          height: 720,
+                          child: const McqScreen(),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -908,7 +935,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   }
 
   Widget _quickNavBar(ColorScheme cs, bool isDark) {
-    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes;
+    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes && _expandMcq;
 
     final items = [
       {'title': 'Theory', 'icon': Icons.menu_book, 'color': Colors.blue, 'expanded': _expandTheory, 'key': _keyTheory, 'idx': 0},
@@ -917,6 +944,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       {'title': 'Tables', 'icon': Icons.table_chart, 'color': Colors.teal, 'expanded': _expandTables, 'key': _keyTables, 'idx': 3},
       {'title': 'Graphs', 'icon': Icons.show_chart, 'color': Colors.purple, 'expanded': _expandGraphs, 'key': _keyGraphs, 'idx': 4},
       {'title': 'Notes', 'icon': Icons.school, 'color': Colors.indigo, 'expanded': _expandNotes, 'key': _keyNotes, 'idx': 5},
+      {'title': 'MCQs', 'icon': Icons.quiz, 'color': Colors.green, 'expanded': _expandMcq, 'key': _keyMcq, 'idx': 6},
     ];
 
     return Container(

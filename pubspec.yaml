@@ -38,6 +38,8 @@ dependencies:
   shared_preferences: ^2.5.5
   postgres: ^3.5.12
   http: ^1.6.0
+  google_fonts: ^9.0.0
+  flutter_realistic_flipbook: ^0.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

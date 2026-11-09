@@ -72,8 +72,9 @@ Current Gain (beta) = ΔI_C / ΔI_B.
   @override
   Widget build(BuildContext context) {
     // Explicitly check if running on Android or iOS
-    final bool isMobile = defaultTargetPlatform == TargetPlatform.android || 
-                          defaultTargetPlatform == TargetPlatform.iOS;
+    final bool isMobile =
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS;
 
     return Scaffold(
       backgroundColor: const Color(0xFF131927),
@@ -195,10 +196,18 @@ Current Gain (beta) = ΔI_C / ΔI_B.
                       const SizedBox(width: 8),
                       TextButton.icon(
                         onPressed: () {},
-                        icon: const Icon(Icons.edit, size: 13, color: Colors.white70),
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 13,
+                          color: Colors.white70,
+                        ),
                         label: const Text(
                           "Re-Configure",
-                          style: TextStyle(fontFamily: 'Courier', fontSize: 10, color: Colors.white70),
+                          style: TextStyle(
+                            fontFamily: 'Courier',
+                            fontSize: 10,
+                            color: Colors.white70,
+                          ),
                         ),
                       ),
                     ],
@@ -212,12 +221,15 @@ Current Gain (beta) = ΔI_C / ΔI_B.
                         aspectRatio: isMobile ? 0.75 : 1.35,
                         child: RealisticFlipbook(
                           controller: _flipbookController,
-                          pages: pages,
-                          singlePageMode: isMobile,
+                          pages: pages
+                              .map(
+                                (page) => FlipbookPage(
+                                  widgetBuilder: (context) => page,
+                                ),
+                              )
+                              .toList(),
+                          singlePage: isMobile,
                           flipDuration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOutCubic,
-                          shadowColor: Colors.black.withOpacity(0.35),
-                          perspective: 0.0012,
                         ),
                       ),
                     ),
