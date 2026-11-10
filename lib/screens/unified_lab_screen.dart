@@ -130,6 +130,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   bool _expandNotes = false;     // Collapsed by default
   bool _expandMcq = true;        // Expanded - MCQs
   bool _expandReport = true;     // Expanded - Lab Record Report
+  bool _expandIndustrial = true; // Expanded - Industrial Benefits
 
   // Section Keys for smooth auto-scrolling
   final GlobalKey _keyTheory = GlobalKey();
@@ -140,6 +141,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   final GlobalKey _keyNotes = GlobalKey();
   final GlobalKey _keyMcq = GlobalKey();
   final GlobalKey _keyReport = GlobalKey();
+  final GlobalKey _keyIndustrial = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -153,6 +155,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       if (sectionIdx == 5) _expandNotes = true;
       if (sectionIdx == 6) _expandMcq = true;
       if (sectionIdx == 7) _expandReport = true;
+      if (sectionIdx == 8) _expandIndustrial = true;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -176,6 +179,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandNotes = (sectionIdx == 5);
       _expandMcq = (sectionIdx == 6);
       _expandReport = (sectionIdx == 7);
+      _expandIndustrial = (sectionIdx == 8);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -199,6 +203,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandNotes = expand;
       _expandMcq = expand;
       _expandReport = expand;
+      _expandIndustrial = expand;
     });
   }
 
@@ -917,14 +922,30 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                         ),
                       ),
                     ],
+                  // ========== 9. INDUSTRIAL BENEFITS ==========
+                  _notionHeading(
+                    key: _keyIndustrial,
+                    num: '9',
+                    title: 'Industrial Benefits & Applications',
+                    icon: Icons.factory,
+                    color: Colors.deepOrange,
+                    isExpanded: _expandIndustrial,
+                    onToggle: () => setState(() => _expandIndustrial = !_expandIndustrial),
+                    onSolo: () => _soloSection(8, _keyIndustrial),
+                  ),
+                  if (_expandIndustrial) ...[
+                    const SizedBox(height: 8),
+                    _industrialBenefitsSection(),
+                    const SizedBox(height: 12),
                   ],
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ),
+  );
   }
 
   // ---- Simple helper widgets ----
@@ -1018,7 +1039,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   }
 
   Widget _quickNavBar(ColorScheme cs, bool isDark) {
-    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes && _expandMcq && _expandReport;
+    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes && _expandMcq && _expandReport && _expandIndustrial;
 
     final items = [
       {'title': 'Theory', 'icon': Icons.menu_book, 'color': Colors.blue, 'expanded': _expandTheory, 'key': _keyTheory, 'idx': 0},
@@ -1029,6 +1050,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       {'title': 'Notes', 'icon': Icons.school, 'color': Colors.indigo, 'expanded': _expandNotes, 'key': _keyNotes, 'idx': 5},
       {'title': 'MCQs', 'icon': Icons.quiz, 'color': Colors.green, 'expanded': _expandMcq, 'key': _keyMcq, 'idx': 6},
       {'title': 'Lab Record', 'icon': Icons.menu_book, 'color': Colors.indigo, 'expanded': _expandReport, 'key': _keyReport, 'idx': 7},
+      {'title': 'Industry', 'icon': Icons.factory, 'color': Colors.deepOrange, 'expanded': _expandIndustrial, 'key': _keyIndustrial, 'idx': 8},
     ];
 
     return Container(
@@ -1110,6 +1132,226 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _industrialBenefitsSection() {
+    final industries = [
+      {
+        'icon': Icons.phone_android,
+        'color': const Color(0xFF1565C0),
+        'title': 'Consumer Electronics',
+        'desc': 'BJTs power amplifiers in smartphones, headphones, radios, and TVs — billions of devices globally.',
+        'fact': 'Market: \$1.1 Trillion',
+      },
+      {
+        'icon': Icons.electrical_services,
+        'color': const Color(0xFF2E7D32),
+        'title': 'Power Electronics',
+        'desc': 'Used as switching elements in motor drives, UPS systems, solar inverters, and EV chargers.',
+        'fact': 'EV Market: 24% CAGR',
+      },
+      {
+        'icon': Icons.wifi,
+        'color': const Color(0xFF6A1B9A),
+        'title': 'Communication',
+        'desc': 'RF amplifiers in cell towers, satellite receivers, and wireless routers rely on BJT technology.',
+        'fact': '5G: 7M+ base stations',
+      },
+      {
+        'icon': Icons.medical_services,
+        'color': const Color(0xFFC62828),
+        'title': 'Medical Devices',
+        'desc': 'ECG/EEG machines, hearing aids, and patient monitors use precision BJT amplifiers.',
+        'fact': 'Med-electronics: \$6B+',
+      },
+      {
+        'icon': Icons.precision_manufacturing,
+        'color': const Color(0xFFE65100),
+        'title': 'Automation',
+        'desc': 'Sensor signal conditioning, PLC circuits, and robotic control systems use BJT-based stages.',
+        'fact': 'Growing 9% yearly',
+      },
+      {
+        'icon': Icons.rocket_launch,
+        'color': const Color(0xFF00695C),
+        'title': 'Aerospace',
+        'desc': 'Radar amplifiers, navigation systems, and satellite electronics rely on robust BJT circuits.',
+        'fact': 'Defence: \$170B+',
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFBF360C), Color(0xFFE64A19)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Row(
+                children: [
+                  Icon(Icons.factory, color: Colors.white, size: 22),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text('Why BJT Matters in Industry',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 6),
+              Text(
+                'The Common Emitter BJT amplifier is one of the most widely used circuits in modern electronics — from your phone to spacecraft.',
+                style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: industries.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.78,
+          ),
+          itemBuilder: (context, i) {
+            final item = industries[i];
+            final color = item['color'] as Color;
+            return Container(
+              decoration: BoxDecoration(
+                color: color.withAlpha(18),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: color.withAlpha(70)),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: color.withAlpha(30), borderRadius: BorderRadius.circular(8)),
+                    child: Icon(item['icon'] as IconData, color: color, size: 22),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(item['title'] as String,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: color)),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: Text(item['desc'] as String,
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF424242), height: 1.4)),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                    decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+                    child: Text(item['fact'] as String,
+                        style: const TextStyle(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3E5F5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF7B1FA2).withAlpha(80)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.star, color: Color(0xFF7B1FA2), size: 18),
+                  SizedBox(width: 8),
+                  Text('Key Advantages of CE Configuration',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF7B1FA2))),
+                ],
+              ),
+              const SizedBox(height: 10),
+              ...[
+                ('High Voltage Gain', '100–1000× amplification — ideal for mic preamps & sensors'),
+                ('High Current Gain', 'β up to 800 means excellent power efficiency'),
+                ('180° Phase Inversion', 'Essential for oscillator and feedback circuits'),
+                ('Low Cost', 'BC547 costs < ₹5 — most affordable amplifier block'),
+                ('Versatile', 'Amplifier, switch, oscillator, and logic gate in one'),
+              ].map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 7),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.check_circle, color: Color(0xFF7B1FA2), size: 15),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text.rich(TextSpan(children: [
+                            TextSpan(text: '${e.$1}  ', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black87)),
+                            TextSpan(text: e.$2, style: const TextStyle(fontSize: 11.5, color: Color(0xFF424242))),
+                          ])),
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1A237E), Color(0xFF283593)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.work, color: Colors.amber, size: 18),
+                  SizedBox(width: 8),
+                  Text('Career Relevance for EC Students',
+                      style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
+                ],
+              ),
+              const SizedBox(height: 10),
+              ...[
+                'VLSI Design Engineer — BJT fundamentals underpin CMOS & BiCMOS chips',
+                'Embedded Systems Engineer — transistor switching drives MCU peripherals',
+                'RF Engineer — BJT amplifiers in 5G & satellite communication systems',
+                'Power Electronics Engineer — control circuits in EV & solar inverters',
+              ].map((t) => Padding(
+                    padding: const EdgeInsets.only(bottom: 7),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('→  ', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                        Expanded(child: Text(t, style: const TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.4))),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
