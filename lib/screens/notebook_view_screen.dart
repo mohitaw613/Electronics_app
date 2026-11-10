@@ -6,7 +6,8 @@ import 'package:electronics_app/utils/notebook_paginator.dart';
 import 'package:electronics_app/widgets/notebook_page_spread.dart';
 
 class NotebookViewScreen extends StatefulWidget {
-  const NotebookViewScreen({Key? key}) : super(key: key);
+  final bool embedded;
+  const NotebookViewScreen({Key? key, this.embedded = false}) : super(key: key);
 
   @override
   State<NotebookViewScreen> createState() => _NotebookViewScreenState();
@@ -76,23 +77,12 @@ Current Gain (beta) = ΔI_C / ΔI_B.
         defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF131927),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E2638),
-        elevation: 0,
-        title: const Text(
-          "3D Lab Record Flipbook",
-          style: TextStyle(fontFamily: 'Courier', fontSize: 16),
-        ),
-      ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final List<String> pageChunks = paginateNotebookContent(
-              rawLabContent,
-              maxLinesPerPage: isMobile ? 14 : 20,
-            );
+    final content = LayoutBuilder(
+      builder: (context, constraints) {
+        final List<String> pageChunks = paginateNotebookContent(
+          rawLabContent,
+          maxLinesPerPage: isMobile ? 14 : 20,
+        );
 
             final List<Widget> pages = [];
 
@@ -238,7 +228,27 @@ Current Gain (beta) = ΔI_C / ΔI_B.
               ],
             );
           },
+        );
+
+    if (widget.embedded) {
+      return Container(
+        color: const Color(0xFF131927),
+        child: content,
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF131927),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E2638),
+        elevation: 0,
+        title: const Text(
+          "3D Lab Record Flipbook",
+          style: TextStyle(fontFamily: 'Courier', fontSize: 16),
         ),
+      ),
+      body: SafeArea(
+        child: content,
       ),
     );
   }

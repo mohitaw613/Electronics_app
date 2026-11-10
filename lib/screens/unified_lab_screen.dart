@@ -12,6 +12,7 @@ import '../widgets/slope_chart_widget.dart';
 import '../widgets/virtual_breadboard.dart';
 import 'bjt_2d_viewer_screen.dart';
 import 'mcq_screen.dart';
+import 'notebook_view_screen.dart';
 
 // ── Transistor Model ──────────────────────────────────────────────────────────
 class TransistorSpec {
@@ -127,7 +128,8 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   bool _expandTables = true;     // Expanded
   bool _expandGraphs = true;     // Expanded
   bool _expandNotes = false;     // Collapsed by default
-  bool _expandMcq = false;
+  bool _expandMcq = true;        // Expanded - MCQs
+  bool _expandReport = true;     // Expanded - 3D Lab Report
 
   // Section Keys for smooth auto-scrolling
   final GlobalKey _keyTheory = GlobalKey();
@@ -137,6 +139,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   final GlobalKey _keyGraphs = GlobalKey();
   final GlobalKey _keyNotes = GlobalKey();
   final GlobalKey _keyMcq = GlobalKey();
+  final GlobalKey _keyReport = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -149,6 +152,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       if (sectionIdx == 4) _expandGraphs = true;
       if (sectionIdx == 5) _expandNotes = true;
       if (sectionIdx == 6) _expandMcq = true;
+      if (sectionIdx == 7) _expandReport = true;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -171,6 +175,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandGraphs = (sectionIdx == 4);
       _expandNotes = (sectionIdx == 5);
       _expandMcq = (sectionIdx == 6);
+      _expandReport = (sectionIdx == 7);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = key.currentContext;
@@ -193,6 +198,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       _expandGraphs = expand;
       _expandNotes = expand;
       _expandMcq = expand;
+      _expandReport = expand;
     });
   }
 
@@ -494,6 +500,13 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             icon: const Icon(Icons.memory),
             tooltip: '2D Pinouts',
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const Bjt3dViewerScreen())),
+          ),
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            iconSize: 20,
+            icon: const Icon(Icons.auto_stories),
+            tooltip: '3D Lab Record Flipbook',
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotebookViewScreen())),
           ),
         ],
       ),
@@ -834,6 +847,66 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                         ),
                       ),
                     ],
+                    // ========== 8. 3D LAB RECORD REPORT ==========
+                    _notionHeading(
+                      key: _keyReport,
+                      num: '8',
+                      title: '3D Lab Record Report',
+                      icon: Icons.auto_stories,
+                      color: Colors.amber,
+                      isExpanded: _expandReport,
+                      onToggle: () =>
+                          setState(() => _expandReport = !_expandReport),
+                      onSolo: () => _soloSection(7, _keyReport),
+                    ),
+                    if (_expandReport) ...[
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 2,
+                        child: Column(
+                          children: [
+                            Container(
+                              color: const Color(0xFF1E2638),
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Icon(Icons.auto_stories, color: Colors.amber, size: 16),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Interactive 3D Flipbook',
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                  ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.amber.shade700,
+                                      foregroundColor: Colors.black,
+                                      visualDensity: VisualDensity.compact,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    ),
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const NotebookViewScreen()),
+                                    ),
+                                    icon: const Icon(Icons.fullscreen, size: 16),
+                                    label: const Text('Fullscreen', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 520,
+                              child: const NotebookViewScreen(embedded: true),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -935,7 +1008,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   }
 
   Widget _quickNavBar(ColorScheme cs, bool isDark) {
-    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes && _expandMcq;
+    final allExpanded = _expandTheory && _expandCircuit && _expandSimulation && _expandTables && _expandGraphs && _expandNotes && _expandMcq && _expandReport;
 
     final items = [
       {'title': 'Theory', 'icon': Icons.menu_book, 'color': Colors.blue, 'expanded': _expandTheory, 'key': _keyTheory, 'idx': 0},
@@ -945,6 +1018,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       {'title': 'Graphs', 'icon': Icons.show_chart, 'color': Colors.purple, 'expanded': _expandGraphs, 'key': _keyGraphs, 'idx': 4},
       {'title': 'Notes', 'icon': Icons.school, 'color': Colors.indigo, 'expanded': _expandNotes, 'key': _keyNotes, 'idx': 5},
       {'title': 'MCQs', 'icon': Icons.quiz, 'color': Colors.green, 'expanded': _expandMcq, 'key': _keyMcq, 'idx': 6},
+      {'title': '3D Report', 'icon': Icons.auto_stories, 'color': Colors.amber, 'expanded': _expandReport, 'key': _keyReport, 'idx': 7},
     ];
 
     return Container(
@@ -959,7 +1033,8 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: items.map((item) {
+                children: [
+                  ...items.map((item) {
                   final isExp = item['expanded'] as bool;
                   final color = item['color'] as Color;
                   final title = item['title'] as String;
@@ -1006,7 +1081,8 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                       ),
                     ),
                   );
-                }).toList(),
+                }),
+                ],
               ),
             ),
           ),
