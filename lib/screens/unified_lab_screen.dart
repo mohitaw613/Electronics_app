@@ -129,7 +129,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   bool _expandGraphs = true;     // Expanded
   bool _expandNotes = false;     // Collapsed by default
   bool _expandMcq = true;        // Expanded - MCQs
-  bool _expandReport = true;     // Expanded - 3D Lab Report
+  bool _expandReport = true;     // Expanded - Lab Record Report
 
   // Section Keys for smooth auto-scrolling
   final GlobalKey _keyTheory = GlobalKey();
@@ -505,7 +505,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             visualDensity: VisualDensity.compact,
             iconSize: 20,
             icon: const Icon(Icons.auto_stories),
-            tooltip: '3D Lab Record Flipbook',
+            tooltip: 'Lab Record Report',
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotebookViewScreen())),
           ),
         ],
@@ -847,13 +847,13 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                         ),
                       ),
                     ],
-                    // ========== 8. 3D LAB RECORD REPORT ==========
+                    // ========== 8. LAB RECORD REPORT ==========
                     _notionHeading(
                       key: _keyReport,
                       num: '8',
-                      title: '3D Lab Record Report',
-                      icon: Icons.auto_stories,
-                      color: Colors.amber,
+                      title: 'Lab Record Report',
+                      icon: Icons.menu_book,
+                      color: Colors.indigo,
                       isExpanded: _expandReport,
                       onToggle: () =>
                           setState(() => _expandReport = !_expandReport),
@@ -862,48 +862,58 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                     if (_expandReport) ...[
                       Card(
                         clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 2,
-                        child: Column(
-                          children: [
-                            Container(
-                              color: const Color(0xFF1E2638),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Row(
-                                    children: [
-                                      Icon(Icons.auto_stories, color: Colors.amber, size: 16),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Interactive 3D Flipbook',
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                  ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.amber.shade700,
-                                      foregroundColor: Colors.black,
-                                      visualDensity: VisualDensity.compact,
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        elevation: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [const Color(0xFF1A237E), const Color(0xFF283593)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: const [
+                                  Icon(Icons.menu_book, color: Colors.amber, size: 28),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Lab Record — Experiment 05',
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
                                     ),
-                                    onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (_) => const NotebookViewScreen()),
-                                    ),
-                                    icon: const Icon(Icons.fullscreen, size: 16),
-                                    label: const Text('Fullscreen', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                   ),
                                 ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 520,
-                              child: const NotebookViewScreen(embedded: true),
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              const Text(
+                                'BJT Common Emitter Characteristics\n10 pages • Observation tables • Calculations • Results',
+                                style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.amber.shade700,
+                                    foregroundColor: Colors.black,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const NotebookViewScreen()),
+                                  ),
+                                  icon: const Icon(Icons.open_in_full, size: 18),
+                                  label: const Text('Open Lab Record', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -1018,7 +1028,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       {'title': 'Graphs', 'icon': Icons.show_chart, 'color': Colors.purple, 'expanded': _expandGraphs, 'key': _keyGraphs, 'idx': 4},
       {'title': 'Notes', 'icon': Icons.school, 'color': Colors.indigo, 'expanded': _expandNotes, 'key': _keyNotes, 'idx': 5},
       {'title': 'MCQs', 'icon': Icons.quiz, 'color': Colors.green, 'expanded': _expandMcq, 'key': _keyMcq, 'idx': 6},
-      {'title': '3D Report', 'icon': Icons.auto_stories, 'color': Colors.amber, 'expanded': _expandReport, 'key': _keyReport, 'idx': 7},
+      {'title': 'Lab Record', 'icon': Icons.menu_book, 'color': Colors.indigo, 'expanded': _expandReport, 'key': _keyReport, 'idx': 7},
     ];
 
     return Container(
