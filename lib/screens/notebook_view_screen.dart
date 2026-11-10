@@ -142,7 +142,7 @@ class _NotebookViewScreenState extends State<NotebookViewScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('NIT Rourkela — EC Lab Record', style: _smallStyle),
-                Text('Page $pageNum of ${_buildAllPages().length}', style: _smallStyle),
+                Text('Page $pageNum of 10', style: _smallStyle),
               ],
             ),
           ),
