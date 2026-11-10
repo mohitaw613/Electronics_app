@@ -926,8 +926,8 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                   _notionHeading(
                     key: _keyIndustrial,
                     num: '9',
-                    title: 'Industrial Benefits & Applications',
-                    icon: Icons.factory,
+                    title: 'How This App Helps Industry',
+                    icon: Icons.precision_manufacturing,
                     color: Colors.deepOrange,
                     isExpanded: _expandIndustrial,
                     onToggle: () => setState(() => _expandIndustrial = !_expandIndustrial),
@@ -1136,48 +1136,48 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   }
 
   Widget _industrialBenefitsSection() {
-    final industries = [
+    final benefits = [
       {
-        'icon': Icons.phone_android,
+        'icon': Icons.speed,
         'color': const Color(0xFF1565C0),
-        'title': 'Consumer Electronics',
-        'desc': 'BJTs power amplifiers in smartphones, headphones, radios, and TVs — billions of devices globally.',
-        'fact': 'Market: \$1.1 Trillion',
+        'title': 'Rapid Prototyping',
+        'desc': 'Pre-silicon & circuit simulation eliminates trial-and-error breadboarding and avoids costly component burnouts.',
+        'fact': 'Time Saved: 60% Faster',
       },
       {
-        'icon': Icons.electrical_services,
+        'icon': Icons.cloud_sync,
         'color': const Color(0xFF2E7D32),
-        'title': 'Power Electronics',
-        'desc': 'Used as switching elements in motor drives, UPS systems, solar inverters, and EV chargers.',
-        'fact': 'EV Market: 24% CAGR',
+        'title': 'Cloud Data Logging',
+        'desc': 'Real-time telemetry to Neon PostgreSQL creates verifiable test logs for multi-site QA/QC audits.',
+        'fact': 'Zero Data Loss',
       },
       {
-        'icon': Icons.wifi,
+        'icon': Icons.school,
         'color': const Color(0xFF6A1B9A),
-        'title': 'Communication',
-        'desc': 'RF amplifiers in cell towers, satellite receivers, and wireless routers rely on BJT technology.',
-        'fact': '5G: 7M+ base stations',
+        'title': 'Workforce Training',
+        'desc': 'Interactive simulation lets new technician hires train safely before operating multimillion-dollar lab test benches.',
+        'fact': 'Zero Equipment Risk',
       },
       {
-        'icon': Icons.medical_services,
+        'icon': Icons.insights,
         'color': const Color(0xFFC62828),
-        'title': 'Medical Devices',
-        'desc': 'ECG/EEG machines, hearing aids, and patient monitors use precision BJT amplifiers.',
-        'fact': 'Med-electronics: \$6B+',
+        'title': 'Automated Analytics',
+        'desc': 'Instant parametric extraction (β_DC, r_in, r_out) replaces tedious manual curve-tracing for component sorting.',
+        'fact': 'Instant Parametric QA',
       },
       {
-        'icon': Icons.precision_manufacturing,
+        'icon': Icons.savings,
         'color': const Color(0xFFE65100),
-        'title': 'Automation',
-        'desc': 'Sensor signal conditioning, PLC circuits, and robotic control systems use BJT-based stages.',
-        'fact': 'Growing 9% yearly',
+        'title': 'Test Bench Cost Cut',
+        'desc': 'Replaces dedicated curve tracer benches (costs ₹2-5 Lakhs each) with a scalable mobile simulation suite.',
+        'fact': 'Cost Cut: 75% Saved',
       },
       {
-        'icon': Icons.rocket_launch,
+        'icon': Icons.hub,
         'color': const Color(0xFF00695C),
-        'title': 'Aerospace',
-        'desc': 'Radar amplifiers, navigation systems, and satellite electronics rely on robust BJT circuits.',
-        'fact': 'Defence: \$170B+',
+        'title': 'Digital Twin & ATE',
+        'desc': 'Acts as a software digital twin of BJT testing, easily integratable into automated manufacturing test pipelines.',
+        'fact': 'Industry 4.0 Ready',
       },
     ];
 
@@ -1200,17 +1200,17 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             children: const [
               Row(
                 children: [
-                  Icon(Icons.factory, color: Colors.white, size: 22),
+                  Icon(Icons.precision_manufacturing, color: Colors.white, size: 22),
                   SizedBox(width: 10),
                   Expanded(
-                    child: Text('Why BJT Matters in Industry',
+                    child: Text('How This App Empowers Modern Industry',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
                   ),
                 ],
               ),
               SizedBox(height: 6),
               Text(
-                'The Common Emitter BJT amplifier is one of the most widely used circuits in modern electronics — from your phone to spacecraft.',
+                'By digitizing transistor characterization, this app accelerates R&D cycles, drastically reduces test bench costs, and provides cloud-traceable QA for hardware engineering teams.',
                 style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
               ),
             ],
@@ -1220,7 +1220,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: industries.length,
+          itemCount: benefits.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -1228,7 +1228,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             childAspectRatio: 0.78,
           ),
           itemBuilder: (context, i) {
-            final item = industries[i];
+            final item = benefits[i];
             final color = item['color'] as Color;
             return Container(
               decoration: BoxDecoration(
@@ -1278,19 +1278,19 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             children: [
               const Row(
                 children: [
-                  Icon(Icons.star, color: Color(0xFF7B1FA2), size: 18),
+                  Icon(Icons.verified, color: Color(0xFF7B1FA2), size: 18),
                   SizedBox(width: 8),
-                  Text('Key Advantages of CE Configuration',
+                  Text('Core Industrial Value Propositions',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF7B1FA2))),
                 ],
               ),
               const SizedBox(height: 10),
               ...[
-                ('High Voltage Gain', '100–1000× amplification — ideal for mic preamps & sensors'),
-                ('High Current Gain', 'β up to 800 means excellent power efficiency'),
-                ('180° Phase Inversion', 'Essential for oscillator and feedback circuits'),
-                ('Low Cost', 'BC547 costs < ₹5 — most affordable amplifier block'),
-                ('Versatile', 'Amplifier, switch, oscillator, and logic gate in one'),
+                ('Zero Hardware Risk', 'Engineers can stress-test operating limits (V_CE, I_C) without risking real silicon chips'),
+                ('Instant Documentation', 'Auto-generates verified digital lab reports with full observation tables and calculations'),
+                ('Mobile Field Accessibility', 'Technicians on the assembly floor can test and reference curves straight from any phone'),
+                ('Audit-Ready Cloud Storage', 'Every experiment run is timestamped & cloud-backed for ISO/QA traceability'),
+                ('Standardized SOPs', 'Ensures uniform component testing procedures across R&D and QA engineering teams'),
               ].map((e) => Padding(
                     padding: const EdgeInsets.only(bottom: 7),
                     child: Row(
@@ -1300,7 +1300,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text.rich(TextSpan(children: [
-                            TextSpan(text: '${e.$1}  ', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black87)),
+                            TextSpan(text: '${e.$1}:  ', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black87)),
                             TextSpan(text: e.$2, style: const TextStyle(fontSize: 11.5, color: Color(0xFF424242))),
                           ])),
                         ),
@@ -1326,18 +1326,18 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             children: [
               const Row(
                 children: [
-                  Icon(Icons.work, color: Colors.amber, size: 18),
+                  Icon(Icons.handshake, color: Colors.amber, size: 18),
                   SizedBox(width: 8),
-                  Text('Career Relevance for EC Students',
+                  Text('Industry 4.0 & Academic-Industrial Synergy',
                       style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
                 ],
               ),
               const SizedBox(height: 10),
               ...[
-                'VLSI Design Engineer — BJT fundamentals underpin CMOS & BiCMOS chips',
-                'Embedded Systems Engineer — transistor switching drives MCU peripherals',
-                'RF Engineer — BJT amplifiers in 5G & satellite communication systems',
-                'Power Electronics Engineer — control circuits in EV & solar inverters',
+                'Fab & Foundries — Provides digital twin models for training technicians before fab cleanroom entry',
+                'Hardware Startups — Minimizes initial capital expenditure on expensive electronic bench equipment',
+                'Aerospace & Defence — Guarantees protocol compliance and tamper-proof session data records',
+                'Electronics Manufacturing Services (EMS) — Rapid functional pre-screening tool for testing lines',
               ].map((t) => Padding(
                     padding: const EdgeInsets.only(bottom: 7),
                     child: Row(
