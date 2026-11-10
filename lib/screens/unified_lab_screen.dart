@@ -1138,46 +1138,46 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
   Widget _industrialBenefitsSection() {
     final benefits = [
       {
-        'icon': Icons.speed,
+        'icon': Icons.security,
         'color': const Color(0xFF1565C0),
-        'title': 'Rapid Prototyping',
-        'desc': 'Pre-silicon & circuit simulation eliminates trial-and-error breadboarding and avoids costly component burnouts.',
-        'fact': 'Time Saved: 60% Faster',
-      },
-      {
-        'icon': Icons.cloud_sync,
-        'color': const Color(0xFF2E7D32),
-        'title': 'Cloud Data Logging',
-        'desc': 'Real-time telemetry to Neon PostgreSQL creates verifiable test logs for multi-site QA/QC audits.',
-        'fact': 'Zero Data Loss',
-      },
-      {
-        'icon': Icons.school,
-        'color': const Color(0xFF6A1B9A),
-        'title': 'Workforce Training',
-        'desc': 'Interactive simulation lets new technician hires train safely before operating multimillion-dollar lab test benches.',
-        'fact': 'Zero Equipment Risk',
-      },
-      {
-        'icon': Icons.insights,
-        'color': const Color(0xFFC62828),
-        'title': 'Automated Analytics',
-        'desc': 'Instant parametric extraction (β_DC, r_in, r_out) replaces tedious manual curve-tracing for component sorting.',
-        'fact': 'Instant Parametric QA',
+        'title': 'Zero Component Damage',
+        'desc': 'Test voltage and current limits virtually without burning expensive silicon transistors.',
+        'fact': '100% Safe Testing',
       },
       {
         'icon': Icons.savings,
-        'color': const Color(0xFFE65100),
-        'title': 'Test Bench Cost Cut',
-        'desc': 'Replaces dedicated curve tracer benches (costs ₹2-5 Lakhs each) with a scalable mobile simulation suite.',
-        'fact': 'Cost Cut: 75% Saved',
+        'color': const Color(0xFF2E7D32),
+        'title': 'Cuts Hardware Cost',
+        'desc': 'Replaces dedicated ₹2L+ curve tracer benches with a mobile testing suite.',
+        'fact': 'Saves ₹2 Lakhs+',
       },
       {
-        'icon': Icons.hub,
+        'icon': Icons.cloud_done,
+        'color': const Color(0xFF6A1B9A),
+        'title': 'Cloud Data Logging',
+        'desc': 'Directly saves every reading to PostgreSQL database with device timestamp.',
+        'fact': 'Zero Data Loss',
+      },
+      {
+        'icon': Icons.speed,
+        'color': const Color(0xFFC62828),
+        'title': 'Instant Calculations',
+        'desc': 'Extracts β, dynamic input & output resistance instantly without manual graphing.',
+        'fact': 'Instant Output',
+      },
+      {
+        'icon': Icons.article,
+        'color': const Color(0xFFE65100),
+        'title': 'Auto Lab Reports',
+        'desc': 'Generates ready-to-verify digital reports with observation tables and signatures.',
+        'fact': 'Ready Report',
+      },
+      {
+        'icon': Icons.phone_android,
         'color': const Color(0xFF00695C),
-        'title': 'Digital Twin & ATE',
-        'desc': 'Acts as a software digital twin of BJT testing, easily integratable into automated manufacturing test pipelines.',
-        'fact': 'Industry 4.0 Ready',
+        'title': 'Shop Floor Portable',
+        'desc': 'Engineers and technicians can test circuits anywhere directly from any phone.',
+        'fact': 'Portable & Fast',
       },
     ];
 
@@ -1186,37 +1186,37 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
       children: [
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFFBF360C), Color(0xFFE64A19)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Row(
                 children: [
-                  Icon(Icons.precision_manufacturing, color: Colors.white, size: 22),
-                  SizedBox(width: 10),
+                  Icon(Icons.precision_manufacturing, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
                   Expanded(
-                    child: Text('How This App Empowers Modern Industry',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                    child: Text('How This App Helps Industry',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                   ),
                 ],
               ),
-              SizedBox(height: 6),
+              SizedBox(height: 4),
               Text(
-                'By digitizing transistor characterization, this app accelerates R&D cycles, drastically reduces test bench costs, and provides cloud-traceable QA for hardware engineering teams.',
-                style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
+                'Replaces costly physical bench equipment, eliminates component burnout risks, and delivers automated cloud-synced reports.',
+                style: TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.4),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -1225,7 +1225,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 0.78,
+            childAspectRatio: 0.82,
           ),
           itemBuilder: (context, i) {
             final item = benefits[i];
@@ -1241,21 +1241,21 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(color: color.withAlpha(30), borderRadius: BorderRadius.circular(8)),
-                    child: Icon(item['icon'] as IconData, color: color, size: 22),
+                    child: Icon(item['icon'] as IconData, color: color, size: 20),
                   ),
                   const SizedBox(height: 8),
                   Text(item['title'] as String,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: color)),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 4),
                   Expanded(
                     child: Text(item['desc'] as String,
-                        style: const TextStyle(fontSize: 11, color: Color(0xFF424242), height: 1.4)),
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF424242), height: 1.35)),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                     decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
                     child: Text(item['fact'] as String,
                         style: const TextStyle(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.bold)),
@@ -1265,7 +1265,7 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             );
           },
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -1278,73 +1278,31 @@ class _UnifiedLabScreenState extends State<UnifiedLabScreen> {
             children: [
               const Row(
                 children: [
-                  Icon(Icons.verified, color: Color(0xFF7B1FA2), size: 18),
+                  Icon(Icons.check_circle_outline, color: Color(0xFF7B1FA2), size: 18),
                   SizedBox(width: 8),
-                  Text('Core Industrial Value Propositions',
+                  Text('Core Industry Advantages',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF7B1FA2))),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               ...[
-                ('Zero Hardware Risk', 'Engineers can stress-test operating limits (V_CE, I_C) without risking real silicon chips'),
-                ('Instant Documentation', 'Auto-generates verified digital lab reports with full observation tables and calculations'),
-                ('Mobile Field Accessibility', 'Technicians on the assembly floor can test and reference curves straight from any phone'),
-                ('Audit-Ready Cloud Storage', 'Every experiment run is timestamped & cloud-backed for ISO/QA traceability'),
-                ('Standardized SOPs', 'Ensures uniform component testing procedures across R&D and QA engineering teams'),
+                ('Saves Hardware Budget', 'No costly curve tracers or DC meters needed'),
+                ('Zero Burnout Risk', 'Safe virtual testing prevents damaging real parts'),
+                ('Cloud Traceability', 'Readings logged directly to PostgreSQL with timestamps'),
+                ('Fast Documentation', 'Auto-generated lab report tables ready for sign-off'),
               ].map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 7),
+                    padding: const EdgeInsets.only(bottom: 6),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.check_circle, color: Color(0xFF7B1FA2), size: 15),
+                        const Icon(Icons.check, color: Color(0xFF7B1FA2), size: 15),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text.rich(TextSpan(children: [
-                            TextSpan(text: '${e.$1}:  ', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black87)),
+                            TextSpan(text: '${e.$1}: ', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5, color: Colors.black87)),
                             TextSpan(text: e.$2, style: const TextStyle(fontSize: 11.5, color: Color(0xFF424242))),
                           ])),
                         ),
-                      ],
-                    ),
-                  )),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1A237E), Color(0xFF283593)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Row(
-                children: [
-                  Icon(Icons.handshake, color: Colors.amber, size: 18),
-                  SizedBox(width: 8),
-                  Text('Industry 4.0 & Academic-Industrial Synergy',
-                      style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
-                ],
-              ),
-              const SizedBox(height: 10),
-              ...[
-                'Fab & Foundries — Provides digital twin models for training technicians before fab cleanroom entry',
-                'Hardware Startups — Minimizes initial capital expenditure on expensive electronic bench equipment',
-                'Aerospace & Defence — Guarantees protocol compliance and tamper-proof session data records',
-                'Electronics Manufacturing Services (EMS) — Rapid functional pre-screening tool for testing lines',
-              ].map((t) => Padding(
-                    padding: const EdgeInsets.only(bottom: 7),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('→  ', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                        Expanded(child: Text(t, style: const TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.4))),
                       ],
                     ),
                   )),
